@@ -71,43 +71,40 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
 
     const handleBack = () => navigate('/');
 
-    // Safety check for categories to avoid join errors
     const categoryDisplay = Array.isArray(product.categoria)
         ? product.categoria.join(', ')
         : (typeof product.categoria === 'string' ? product.categoria : 'General');
 
-    const displaySubtitle = `${categoryDisplay} Collection`;
-
     return (
-        <div className="h-screen bg-gray-100 dark:bg-gray-900 flex flex-col relative overflow-hidden">
-            {/* 1. TOP SECTION: IMAGE & FLOATING CONTROLS - COMPACT HEIGHT (45vh) */}
-            <div className="relative h-[45vh] w-full bg-[#E5E0DC] dark:bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0">
-                {/* Back Button - High Contrast */}
-                <button
-                    onClick={handleBack}
-                    className="absolute top-4 left-4 z-50 p-2.5 bg-white/80 dark:bg-black/50 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-sm active:scale-95 transition-all"
-                >
-                    <ArrowLeft className="w-5 h-5" />
-                </button>
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col relative overflow-hidden">
+            {/* BACK BUTTON - Fixed below header */}
+            <button
+                onClick={handleBack}
+                className="fixed top-[72px] left-4 z-50 p-2.5 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-md active:scale-95 transition-all border border-gray-100 dark:border-gray-700"
+            >
+                <ArrowLeft className="w-5 h-5" />
+            </button>
 
-                {/* Right Icons */}
-                <div className="absolute top-4 right-4 z-50 flex flex-col gap-3">
-                    <button className="p-2.5 bg-white/80 dark:bg-black/50 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-sm active:scale-95 transition-all">
+            {/* 1. TOP SECTION: IMAGE & FLOATING CONTROLS - TALLER HEIGHT (55vh) */}
+            <div className="relative h-[55vh] w-full bg-[#E5E0DC] dark:bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-300">
+                {/* Right Icons - Adjusted top position to match roughly below header */}
+                <div className="absolute top-[72px] right-4 z-50 flex flex-col gap-3">
+                    <button className="p-2.5 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-sm active:scale-95 transition-all">
                         <ShoppingBag className="w-5 h-5" />
                         <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
                     </button>
                     <button
                         onClick={() => toggleFavorite(product.id)}
-                        className={`p-2.5 backdrop-blur-md rounded-full shadow-sm active:scale-95 transition-all ${isFavorite ? 'bg-red-50 text-red-500' : 'bg-white/80 dark:bg-black/50 text-gray-900 dark:text-white'}`}
+                        className={`p-2.5 backdrop-blur-md rounded-full shadow-sm active:scale-95 transition-all ${isFavorite ? 'bg-red-50 text-red-500' : 'bg-white/90 dark:bg-black/80 text-gray-900 dark:text-white'}`}
                     >
                         <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
                     </button>
                 </div>
 
-                {/* Zoom Button - Visible */}
+                {/* Zoom Button */}
                 <button
                     onClick={() => setIsZoomed(true)}
-                    className="absolute bottom-4 right-4 z-40 p-2 bg-black/50 text-white rounded-full backdrop-blur-sm active:scale-95"
+                    className="absolute bottom-6 right-4 z-30 p-2 bg-black/50 text-white rounded-full backdrop-blur-sm active:scale-95"
                 >
                     <Maximize2 className="w-5 h-5" />
                 </button>
@@ -132,8 +129,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                 </div>
 
                 {/* Price Tag */}
-                <div className="absolute bottom-4 left-4 bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-3 py-1.5 rounded-full shadow-xl transform -rotate-1 z-30">
-                    <span className="font-bold text-base">{CURRENCY} {product.precio}.00</span>
+                <div className="absolute bottom-6 left-6 bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-4 py-2 rounded-full shadow-xl transform -rotate-2 z-30">
+                    <span className="font-bold text-lg">{CURRENCY} {product.precio}.00</span>
                 </div>
 
                 <img
@@ -146,45 +143,44 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                 />
             </div>
 
-            {/* 2. BOTTOM SECTION: DETAILS SHEET - FULL CONTENT VISIBLE */}
-            <div className="flex-1 bg-white dark:bg-gray-900 rounded-t-[30px] -mt-5 z-20 px-5 pt-5 pb-4 flex flex-col shadow-[0_-5px_20px_rgba(0,0,0,0.1)] relative overflow-hidden">
+            {/* 2. BOTTOM SECTION: DETAILS SHEET - Flowing Content mode */}
+            <div className="flex-1 bg-white dark:bg-gray-900 rounded-t-[35px] -mt-8 z-20 px-6 pt-6 pb-6 flex flex-col shadow-[0_-5px_20px_rgba(0,0,0,0.1)] relative overflow-y-auto">
                 {/* Handle */}
-                <div className="w-10 h-1 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-3 flex-shrink-0"></div>
+                <div className="w-12 h-1 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-4 flex-shrink-0"></div>
 
-                {/* Content Container - Allow scrolling if screen is tiny, but aim to fit */}
-                <div className="flex-1 flex flex-col min-h-0">
+                <div className="space-y-4 pb-20 sm:pb-4">
                     {/* Header: Title & Rating */}
-                    <div className="flex justify-between items-start mb-2 flex-shrink-0">
-                        <h1 className="text-xl font-bold text-gray-900 dark:text-white leading-tight max-w-[70%] line-clamp-2">
+                    <div className="flex justify-between items-start">
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight max-w-[70%]">
                             {product.nombre}
                         </h1>
-                        <div className="flex items-center gap-1 text-orange-400 bg-orange-50 dark:bg-orange-900/30 px-2 py-0.5 rounded-lg">
-                            <Star className="w-3.5 h-3.5 fill-current" />
-                            <span className="text-xs font-bold text-gray-700 dark:text-gray-300">4.8</span>
+                        <div className="flex items-center gap-1 text-orange-400 bg-orange-50 dark:bg-orange-900/30 px-2 py-1 rounded-lg">
+                            <Star className="w-4 h-4 fill-current" />
+                            <span className="text-sm font-bold text-gray-700 dark:text-gray-300">4.8</span>
                         </div>
                     </div>
 
-                    {/* Description - Swapped Position & Compact */}
-                    <div className="mb-3 flex-shrink-0">
-                        <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm leading-relaxed line-clamp-3">
-                            {product.descripcion || "Diseño exclusivo de alta calidad. Materiales premium para garantizar comodidad."}
+                    {/* Description */}
+                    <div>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                            {product.descripcion || "Diseño exclusivo de alta calidad. Materiales premium para garantizar comodidad y estilo en cada momento."}
                         </p>
                     </div>
 
-                    {/* Size Selector - Compact & No Cutoff */}
+                    {/* Size Selector */}
                     {hasVariants && (
-                        <div className="mb-3 flex-shrink-0">
+                        <div>
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm font-bold text-gray-900 dark:text-white">Talla</span>
-                                <span className="text-[10px] text-gray-500 underline">Guía</span>
+                                <span className="text-sm font-bold text-gray-900 dark:text-white">Selecciona Talla</span>
+                                <span className="text-xs text-gray-500 underline">Guía de tallas</span>
                             </div>
-                            <div className="flex flex-wrap gap-2.5">
+                            <div className="flex flex-wrap gap-3">
                                 {product.tallas.map(s => (
                                     <button
                                         key={s}
                                         onClick={() => setSelectedSize(s)}
                                         className={`
-                                            w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all
+                                            w-11 h-11 rounded-full flex items-center justify-center text-sm font-bold transition-all
                                             ${selectedSize === s
                                                 ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md scale-105'
                                                 : 'border border-gray-200 text-gray-500 hover:border-gray-900 hover:text-gray-900 dark:border-gray-700 dark:hover:border-white dark:hover:text-white'}
@@ -197,30 +193,30 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                         </div>
                     )}
 
-                    {/* Categories - Moved to bottom, compact */}
-                    <div className="mb-auto mt-1 flex-shrink-0">
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">
+                    {/* Collection Tag */}
+                    <div>
+                        <p className="text-xs text-gray-400 uppercase tracking-wider font-bold">
                             {categoryDisplay} Collection
                         </p>
                     </div>
-                </div>
 
-                {/* Footer Action - Fixed at bottom of padding */}
-                <div className="mt-3 pt-0 flex-shrink-0">
-                    <button
-                        onClick={handleAddToCart}
-                        disabled={!hasStock || (hasVariants && !selectedSize)}
-                        className={`
-                            w-full py-3.5 rounded-2xl font-bold text-base text-white shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-2
-                            ${hasStock
-                                ? 'bg-gray-900 hover:bg-black dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'
-                                : 'bg-gray-300 cursor-not-allowed'}
-                        `}
-                    >
-                        {hasStock
-                            ? (hasVariants && !selectedSize ? 'Elige tu Talla' : 'Añadir al Carrito')
-                            : 'Agotado'}
-                    </button>
+                    {/* Add to Cart Button - Flows naturally after content */}
+                    <div className="pt-4">
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={!hasStock || (hasVariants && !selectedSize)}
+                            className={`
+                                w-full py-4 rounded-2xl font-bold text-lg text-white shadow-xl transition-transform active:scale-95 flex items-center justify-center gap-2
+                                ${hasStock
+                                    ? 'bg-gray-900 hover:bg-black dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'
+                                    : 'bg-gray-300 cursor-not-allowed'}
+                            `}
+                        >
+                            {hasStock
+                                ? (hasVariants && !selectedSize ? 'Elige tu Talla' : 'Añadir al Carrito')
+                                : 'Agotado'}
+                        </button>
+                    </div>
                 </div>
             </div>
 
