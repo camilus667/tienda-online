@@ -59,9 +59,17 @@ const Home: React.FC<HomeProps> = ({
   return (
     <main className="max-w-6xl mx-auto px-4 pb-20 transition-colors duration-300">
       {/* Search Bar */}
-      <div className="pt-4 pb-2 px-1">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white leading-tight">Bienvenido a</h1>
-        <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600 dark:from-primary dark:to-purple-400">Mundo Kids Style</h2>
+      {/* Compact Banner */}
+      <div className="pt-20 px-1 mb-2">
+        <div className="w-full bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 text-white rounded-xl p-4 shadow-md flex items-center justify-between">
+          <div>
+            <h1 className="text-lg font-bold leading-tight">Mundo Kids</h1>
+            <p className="text-[10px] text-gray-300 font-medium">Estilo y calidad para tus peques</p>
+          </div>
+          <div className="bg-white/20 p-1.5 rounded-full">
+            <span className="text-xl">✨</span>
+          </div>
+        </div>
       </div>
 
       {/* Search Bar */}
