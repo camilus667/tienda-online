@@ -26,12 +26,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <div className={`group flex flex-col ${!hasStock ? 'opacity-75' : ''}`}>
       {/* IMAGEN Y BOTONES FLOTANTES */}
-      <div className="relative mb-2 overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm">
+      {/* IMAGEN Y BOTONES FLOTANTES */}
+      <div className="relative mb-3 overflow-hidden rounded-[20px] bg-gray-100 dark:bg-gray-800 shadow-none transition-transform active:scale-[0.98]">
         <div className={`relative ${IMAGE_ASPECT_RATIO} cursor-pointer`} onClick={handleOpen}>
           <img
             src={product.imagen || "https://placehold.co/400x400?text=No+Image"}
             alt={product.nombre}
-            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover mix-blend-multiply dark:mix-blend-normal opacity-95 hover:opacity-100 transition-opacity"
             style={{ objectPosition: `center ${IMAGE_VERTICAL_ALIGN}` }}
             onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=Sin+Foto' }}
           />
@@ -45,38 +46,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         {/* Floating Action Buttons */}
-        <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
-          {/* Heart Button (Mockup) */}
-          <button className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors border border-gray-100 dark:border-gray-600">
-            <Heart className="w-5 h-5" />
-          </button>
-          {/* Add Button */}
-          <button
-            onClick={(e) => { e.stopPropagation(); handleOpen(); }}
-            disabled={!hasStock}
-            className={`w-8 h-8 rounded-full shadow-md flex items-center justify-center transition-transform active:scale-95 ${hasStock ? 'bg-primary text-white hover:bg-primary-dark border-2 border-white dark:border-gray-800' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
-          >
-            <Plus className="w-5 h-5" strokeWidth={3} />
+        <div className="absolute top-3 right-3 z-10">
+          {/* Heart Button */}
+          <button className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
+            <Heart className="w-4 h-4" strokeWidth={2.5} />
           </button>
         </div>
       </div>
 
       {/* CONTENIDO TEXTO */}
-      <div className="px-1 flex flex-col gap-1 cursor-pointer" onClick={handleOpen}>
-        {/* Precio Destacado */}
-        <div className="flex items-baseline gap-2">
-          <span className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white leading-none">{CURRENCY} {product.precio}</span>
+      <div className="px-1 flex flex-col gap-0.5 cursor-pointer" onClick={handleOpen}>
+
+        {/* Título */}
+        <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-tight line-clamp-1">{product.nombre}</h3>
+
+        {/* Precio */}
+        <div className="text-sm font-semibold text-gray-600 dark:text-gray-300">
+          {CURRENCY} {product.precio}.00
         </div>
 
-        {/* Promo (Mockup - si existe campo en el futuro usarlo) */}
-        {/* <p className="text-[10px] sm:text-xs text-secondary font-semibold">Oferta Valida Hasta Agotar Stock</p> */}
-
-        {/* Título y Unidad */}
-        <h3 className="text-sm sm:text-base text-gray-800 dark:text-gray-200 font-medium leading-tight line-clamp-2 min-h-[2.5em]">{product.nombre}</h3>
-
-        <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
-          {displayCategory} {product.color ? `• ${product.color}` : ''}
-        </p>
+        {/* Color Dots (Simulated based on context or static for bloom style) */}
+        <div className="flex gap-1.5 mt-1.5">
+          <span className="w-3 h-3 rounded-full bg-black dark:bg-white border border-gray-200 dark:border-gray-600"></span>
+          <span className="w-3 h-3 rounded-full bg-gray-400"></span>
+          {product.color && <span className="text-[10px] text-gray-400 ml-1 capitalize flex items-center">{product.color}</span>}
+        </div>
       </div>
     </div>
   );
