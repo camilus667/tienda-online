@@ -9,6 +9,7 @@ import Header from './components/Header';
 import Home from './components/Home';
 import ProductDetail from './components/ProductDetail';
 import CartDrawer from './components/CartDrawer';
+import BottomNav from './components/BottomNav';
 
 export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -31,7 +32,7 @@ export default function App() {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'theme');
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
   const loadProducts = useCallback(async () => {
@@ -138,30 +139,32 @@ export default function App() {
           onCartClick={() => setIsCartOpen(true)}
           onReload={forceReload}
           theme={theme}
-          onToggleTheme={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
+          onToggleTheme={toggleTheme}
         />
 
-        <Routes>
-          <Route path="/" element={
-            <Home
-              products={products}
-              loading={loading}
-              error={error}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              onReload={forceReload}
-            />
-          } />
-          <Route path="/producto/:slug" element={
-            <ProductDetail
-              products={products}
-              loading={loading}
-              onAddToCart={addToCart}
-            />
-          } />
-        </Routes>
+        <div className="pb-24"> {/* Padding bottom para el BottomNav */}
+          <Routes>
+            <Route path="/" element={
+              <Home
+                products={products}
+                loading={loading}
+                error={error}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                onReload={forceReload}
+              />
+            } />
+            <Route path="/producto/:slug" element={
+              <ProductDetail
+                products={products}
+                loading={loading}
+                onAddToCart={addToCart}
+              />
+            } />
+          </Routes>
+        </div>
 
         <CartDrawer
           isOpen={isCartOpen}
@@ -171,6 +174,8 @@ export default function App() {
           removeFromCart={removeFromCart}
           changeCartItemSize={changeCartItemSize}
         />
+
+        <BottomNav cartCount={cartCount} onCartClick={() => setIsCartOpen(true)} />
       </div>
     </HashRouter>
   );

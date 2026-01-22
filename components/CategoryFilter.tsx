@@ -49,10 +49,10 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
           <button
             onClick={() => onSelectCategory('Todos')}
             className={`
-                  px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap active:scale-95 border
+                  px-5 py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap active:scale-95 border-0
                   ${selectedCategory === 'Todos'
-                ? 'bg-primary text-white border-primary shadow-primary'
-                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'}
+                ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md'
+                : 'bg-white text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 hover:text-gray-900'}
                 `}
           >
             Todos
@@ -75,10 +75,10 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
                 }}
                 onClick={() => onSelectCategory(cat)}
                 className={`
-                    flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap active:scale-95 border
+                    flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap active:scale-95 border-0
                     ${selectedCategory === cat
-                    ? 'bg-primary text-white border-primary shadow-primary'
-                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'}
+                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md'
+                    : 'bg-white text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 hover:text-gray-900'}
                 `}
               >
                 {cat}
