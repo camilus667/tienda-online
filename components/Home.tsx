@@ -58,7 +58,6 @@ const Home: React.FC<HomeProps> = ({
 
   return (
     <main className="max-w-6xl mx-auto px-4 pb-20 transition-colors duration-300">
-      {/* Search Bar */}
       {/* Compact Banner */}
       <div className="pt-20 px-1 mb-2">
         <div className="w-full bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 text-white rounded-xl p-4 shadow-md flex items-center justify-between">
@@ -72,28 +71,28 @@ const Home: React.FC<HomeProps> = ({
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="py-2 space-y-3 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30 transition-colors">
+      {/* Streamlined Search Bar */}
+      <div className="py-1 space-y-0 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30 transition-colors">
         <div className="flex gap-2 items-center">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="¿Qué estás buscando?"
-              className="w-full pl-11 pr-4 py-3.5 rounded-full bg-gray-100 dark:bg-gray-800 dark:text-white border-2 border-transparent focus:border-primary/20 shadow-sm text-sm font-medium transition-all placeholder:text-gray-500 focus:ring-0 focus:bg-white dark:focus:bg-gray-900"
+              placeholder="Buscar..."
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary/30 shadow-sm text-sm font-medium transition-all placeholder:text-gray-500 focus:ring-0 focus:bg-white dark:focus:bg-gray-900"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
-              <button onClick={() => setSearchTerm("")} className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-full active:scale-95">
-                <X className="w-5 h-5" />
+              <button onClick={() => setSearchTerm("")} className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-full active:scale-95">
+                <X className="w-3 h-3" />
               </button>
             )}
           </div>
           <button
             onClick={onReload}
-            className="p-3.5 bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-full shadow-md active:scale-95 transition-transform"
-            title="Actualizar / Filtros"
+            className="p-2.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm active:scale-95 transition-transform"
+            title="Filtros"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
           </button>
