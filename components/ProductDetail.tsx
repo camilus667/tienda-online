@@ -79,16 +79,16 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col relative overflow-hidden">
             {/* 1. TOP SECTION: IMAGE & FLOATING CONTROLS - TALLER HEIGHT (55vh) */}
             <div className="relative h-[55vh] w-full bg-[#E5E0DC] dark:bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-300">
-                {/* Back Button - NOW ABSOLUTE inside the image container */}
+                {/* Back Button - FIXED below header (z-40 < Header z-50) */}
                 <button
                     onClick={handleBack}
-                    className="absolute top-[72px] left-4 z-50 p-2.5 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-sm active:scale-95 transition-all border border-gray-100 dark:border-gray-700"
+                    className="fixed top-[72px] left-4 z-40 p-2.5 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-md active:scale-95 transition-all border border-gray-100 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-900"
                 >
                     <ArrowLeft className="w-5 h-5" />
                 </button>
 
-                {/* Right Icons */}
-                <div className="absolute top-[72px] right-4 z-50 flex flex-col gap-3">
+                {/* Right Icons - ABSOLUTE (scrolls with image) & Lower Z-Index (z-30 < Header z-50) */}
+                <div className="absolute top-[72px] right-4 z-30 flex flex-col gap-3">
                     <button className="p-2.5 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-sm active:scale-95 transition-all">
                         <ShoppingBag className="w-5 h-5" />
                         <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
