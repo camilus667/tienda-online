@@ -71,24 +71,23 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
 
     const handleBack = () => navigate('/');
 
-    // Safety check for categories to avoid join errors
     const categoryDisplay = Array.isArray(product.categoria)
         ? product.categoria.join(', ')
         : (typeof product.categoria === 'string' ? product.categoria : 'General');
 
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col relative overflow-hidden">
-            {/* BACK BUTTON - Fixed below header */}
-            <button
-                onClick={handleBack}
-                className="fixed top-[72px] left-4 z-50 p-2.5 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-md active:scale-95 transition-all border border-gray-100 dark:border-gray-700"
-            >
-                <ArrowLeft className="w-5 h-5" />
-            </button>
-
             {/* 1. TOP SECTION: IMAGE & FLOATING CONTROLS - TALLER HEIGHT (55vh) */}
             <div className="relative h-[55vh] w-full bg-[#E5E0DC] dark:bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0 transition-all duration-300">
-                {/* Right Icons - Adjusted top position to match roughly below header */}
+                {/* Back Button - NOW ABSOLUTE inside the image container */}
+                <button
+                    onClick={handleBack}
+                    className="absolute top-[72px] left-4 z-50 p-2.5 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-sm active:scale-95 transition-all border border-gray-100 dark:border-gray-700"
+                >
+                    <ArrowLeft className="w-5 h-5" />
+                </button>
+
+                {/* Right Icons */}
                 <div className="absolute top-[72px] right-4 z-50 flex flex-col gap-3">
                     <button className="p-2.5 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-gray-900 dark:text-white shadow-sm active:scale-95 transition-all">
                         <ShoppingBag className="w-5 h-5" />
@@ -161,11 +160,15 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                         </div>
                     </div>
 
-                    {/* Collection Tag - Moved Below Title */}
-                    <div>
+                    {/* Collection Tag AND Stock Info - Same Row */}
+                    <div className="flex justify-between items-center">
                         <p className="text-xs text-primary dark:text-primary font-bold uppercase tracking-wider">
                             {categoryDisplay} Collection
                         </p>
+                        <div className="text-[10px] text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full border border-gray-200 dark:border-gray-700">
+                            <span className={`w-1.5 h-1.5 rounded-full ${hasStock ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                            {hasStock ? `${product.stock} disp.` : 'Sin stock'}
+                        </div>
                     </div>
 
                     {/* Description */}
@@ -197,11 +200,6 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                                         {s}
                                     </button>
                                 ))}
-                            </div>
-                            {/* Compact Stock Info */}
-                            <div className="mt-2 text-[10px] text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1">
-                                <span className={`w-1.5 h-1.5 rounded-full ${hasStock ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                                {hasStock ? `${product.stock} unidades disponibles` : 'Sin stock'}
                             </div>
                         </div>
                     )}
