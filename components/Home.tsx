@@ -72,30 +72,22 @@ const Home: React.FC<HomeProps> = ({
       </div>
 
       {/* Streamlined Search Bar */}
-      <div className="py-1 space-y-0 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30 transition-colors">
-        <div className="flex gap-2 items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Buscar..."
-              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary/30 shadow-sm text-sm font-medium transition-all placeholder:text-gray-500 focus:ring-0 focus:bg-white dark:focus:bg-gray-900"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            {searchTerm && (
-              <button onClick={() => setSearchTerm("")} className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-full active:scale-95">
-                <X className="w-3 h-3" />
-              </button>
-            )}
-          </div>
-          <button
-            onClick={onReload}
-            className="p-2.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-white border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm active:scale-95 transition-transform"
-            title="Filtros"
-          >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
-          </button>
+      {/* Ultra-Streamlined Search Bar */}
+      <div className="py-0.5 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30 transition-colors">
+        <div className="relative w-full">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5" />
+          <input
+            type="text"
+            placeholder="Buscar..."
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 dark:text-white border border-gray-200 dark:border-gray-700 focus:border-primary/30 shadow-none text-sm font-medium transition-all placeholder:text-gray-500 focus:ring-0 focus:bg-white dark:focus:bg-gray-900"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <button onClick={() => setSearchTerm("")} className="absolute right-2 top-1/2 transform -translate-y-1/2 p-0.5 text-gray-400 hover:text-gray-600 rounded-full active:scale-95">
+              <X className="w-3 h-3" />
+            </button>
+          )}
         </div>
       </div>
 
