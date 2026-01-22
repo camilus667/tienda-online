@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ZoomIn, Maximize, Minus, Plus, ShoppingCart, Loader2, ArrowLeft } from 'lucide-react';
+import { Minus, Plus, ShoppingBag, Loader2, ArrowLeft, Star, Heart } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { CURRENCY, IMAGE_ASPECT_RATIO, IMAGE_VERTICAL_ALIGN } from '../constants';
@@ -10,9 +10,11 @@ interface ProductDetailProps {
     products: Product[];
     onAddToCart: (product: Product, size: string, quantity: number) => void;
     loading: boolean;
+    favorites: string[];
+    toggleFavorite: (id: string) => void;
 }
 
-const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, loading }) => {
+const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, loading, favorites, toggleFavorite }) => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
@@ -23,6 +25,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
 
     const hasVariants = product?.tallas && Array.isArray(product.tallas) && product.tallas.length > 0;
     const hasStock = product ? product.stock > 0 : false;
+    const isFavorite = product ? favorites.includes(product.id) : false;
 
     useEffect(() => {
         setQuantity(1);
@@ -35,7 +38,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
 
     if (loading && !product) {
         return (
-            <div className="min-h-screen pt-20 flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <Loader2 className="w-10 h-10 animate-spin text-primary" />
             </div>
         );
@@ -43,11 +46,11 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
 
     if (!product) {
         return (
-            <div className="min-h-screen pt-20 flex flex-col items-center justify-center space-y-4">
+            <div className="min-h-screen flex flex-col items-center justify-center space-y-4 bg-gray-50">
                 <p className="text-gray-500 text-lg">Producto no encontrado</p>
                 <button
                     onClick={() => navigate('/')}
-                    className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-primary-dark transition-colors"
+                    className="px-6 py-2 bg-gray-900 text-white rounded-full font-bold hover:bg-black transition-colors"
                 >
                     Volver a la tienda
                 </button>
@@ -57,128 +60,161 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
 
     const size = hasVariants && selectedSize
         ? selectedSize
-        : (product.tallas && product.tallas.length > 0 ? product.tallas[0] : 'Única');
+        : (product.tallas && product.tallas.length > 0 ? product.tallas[0] : 'U');
 
     const handleAddToCart = () => {
         if (!hasStock) return;
         if (hasVariants && !selectedSize) return;
         onAddToCart(product, size, quantity);
-        navigate('/'); // Optionally go back or open cart
+        navigate('/');
     };
-
-    const productCategories = product.categoria.join(', ');
-    const catColorTags = [productCategories ? productCategories.split(',')[0].trim() : null, product.color].filter(Boolean);
 
     const handleBack = () => navigate('/');
 
-    return (
-        <>
-            {/* Botón Volver Fijo - Ajustado más arriba y a la izquierda */}
-            <button
-                onClick={handleBack}
-                className="fixed top-[68px] left-1 z-40 flex items-center gap-1 px-3 py-1.5 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-md rounded-full text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 hover:pl-2 hover:pr-4 transition-all active:scale-95 group"
-            >
-                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                <span>Volver</span>
-            </button>
+    // Safety check for categories to avoid join errors
+    const categoryDisplay = Array.isArray(product.categoria)
+        ? product.categoria.join(', ')
+        : (typeof product.categoria === 'string' ? product.categoria : 'General');
 
-            <div className="min-h-screen pt-24 pb-10 px-2 sm:px-4 flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors">
-                <div className="bg-white dark:bg-gray-800 rounded-2xl w-full max-w-4xl overflow-hidden shadow-xl flex flex-col border border-gray-100 dark:border-gray-700 transition-colors">
-                    <div className="px-4 py-3 sm:p-4 flex justify-between items-center border-b border-gray-100 dark:border-gray-700 flex-shrink-0 bg-white dark:bg-gray-800">
-                        <h2 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white leading-tight">{product.nombre}</h2>
-                    </div>
-                    <div className="p-4 sm:p-6 overflow-y-auto flex-1 dark:bg-gray-800 transition-colors">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 md:gap-8">
-                            {/* COLUMNA 1: IMAGEN Y DATOS PRINCIPALES */}
-                            <div className='md:col-span-1'>
-                                <div className={`relative ${IMAGE_ASPECT_RATIO} mb-2 sm:mb-4 group`}>
-                                    <img
-                                        src={product.imagen || "https://placehold.co/400x400?text=No+Image"}
-                                        alt={product.nombre}
-                                        className="w-full h-full object-cover rounded-xl shadow-md cursor-pointer dark:brightness-90 transition-all"
-                                        style={{ objectPosition: `center ${IMAGE_VERTICAL_ALIGN}` }}
-                                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=Sin+Foto' }}
-                                        onClick={() => setIsZoomed(true)}
-                                    />
-                                    {/* Tags solo en móvil */}
-                                    <div className='absolute bottom-2 right-2 flex gap-1 sm:hidden'>
-                                        {catColorTags.map(tag => (
-                                            <span key={tag} className="bg-black/60 text-white text-xs font-semibold px-2 py-0.5 rounded-full backdrop-blur-sm">{tag}</span>
-                                        ))}
-                                    </div>
-                                    {/* Overlay Lupa en Desktop */}
-                                    <div className="hidden sm:flex absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 items-center justify-center rounded-xl cursor-pointer" onClick={() => setIsZoomed(true)}>
-                                        <div className="bg-white dark:bg-gray-700 p-3 rounded-full shadow-lg"><ZoomIn className="w-6 h-6 text-gray-700 dark:text-gray-300" /></div>
-                                    </div>
-                                    <button onClick={() => setIsZoomed(true)} className='sm:hidden absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full shadow-lg' title='Ver en pantalla completa'><Maximize className='w-5 h-5' /></button>
-                                </div>
-                                <div className='mt-2 sm:mt-4'>
-                                    <p className="text-3xl font-extrabold text-primary mb-2 transition-colors">{CURRENCY} {product.precio}</p>
-                                    <div className="hidden sm:flex flex-wrap gap-2 text-xs mb-3">
-                                        {productCategories && <span className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full border border-gray-200 dark:border-gray-600">Cat: {productCategories}</span>}
-                                        {product.color && <span className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full border border-gray-200 dark:border-gray-600">Color: {product.color}</span>}
-                                    </div>
-                                </div>
-                            </div>
-                            {/* COLUMNA 2: DESCRIPCIÓN Y COMPRA */}
-                            <div className='flex flex-col justify-start md:col-span-1'>
-                                <div>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white mb-1 text-base sm:mt-0">Detalles:</h3>
-                                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed">{product.descripcion || "Sin descripción."}</p>
-                                    <div className='py-4 my-2 border-t border-b border-gray-100 dark:border-gray-700 sm:py-3 sm:my-3'>
-                                        {hasVariants && (
-                                            <div className="mb-6">
-                                                <label className="block text-sm font-semibold text-gray-900 dark:text-gray-200 mb-2">Talla:</label>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {product.tallas.map(s => (
-                                                        <button
-                                                            key={s}
-                                                            onClick={() => setSelectedSize(s)}
-                                                            className={`
-                                                    px-4 py-2 rounded-full border-2 text-sm font-medium transition-all active:scale-95 
-                                                    ${selectedSize === s ? 'bg-primary border-primary text-white shadow-md' : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary dark:hover:border-primary'}
-                                                `}
-                                                        >
-                                                            {s}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        )}
-                                        <div className="mb-3">
-                                            <label className="block text-sm font-semibold text-gray-900 dark:text-gray-200 mb-2">Cantidad:</label>
-                                            <div className="flex flex-row items-center gap-4">
-                                                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-750 border border-gray-200 dark:border-gray-600 p-1 rounded-full">
-                                                    <button onClick={() => setQuantity(q => Math.max(1, q - 1))} disabled={quantity <= 1} className="p-2 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-200 disabled:opacity-50 shadow-sm active:scale-95 transition-colors"><Minus className="w-4 h-4" /></button>
-                                                    <span className="text-base font-bold w-8 text-center dark:text-white">{quantity}</span>
-                                                    <button onClick={() => setQuantity(q => q < product.stock ? q + 1 : q)} disabled={quantity >= product.stock} className="p-2 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-200 disabled:opacity-50 shadow-sm active:scale-95 transition-colors"><Plus className="w-4 h-4" /></button>
-                                                </div>
-                                                <div className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                    {hasStock ? <span className="text-primary flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-primary inline-block"></span> En stock: {product.stock}</span> : <span className="text-red-600 font-bold">Agotado</span>}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mt-auto pt-4">
-                                    <button
-                                        onClick={handleAddToCart}
-                                        disabled={!hasStock || (hasVariants && !selectedSize)}
-                                        className={`
-                                w-full py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition-transform shadow-lg hover:shadow-xl
-                                ${hasStock && (!hasVariants || selectedSize) ? 'bg-primary text-white hover:bg-primary-dark hover:-translate-y-1' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'}
-                            `}
-                                    >
-                                        <ShoppingCart className="w-5 h-5" /> {hasStock ? (hasVariants && !selectedSize ? 'Selecciona Talla' : `Añadir (${quantity})`) : 'Sin Stock'}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+    const displaySubtitle = `${categoryDisplay} Collection`;
+
+    return (
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col relative overflow-hidden">
+            {/* 1. TOP SECTION: IMAGE & FLOATING CONTROLS */}
+            <div className="relative h-[60vh] w-full bg-[#E5E0DC] dark:bg-gray-800 flex items-center justify-center overflow-hidden">
+                {/* Back Button */}
+                <button
+                    onClick={handleBack}
+                    className="absolute top-4 left-4 z-40 p-2 bg-white/50 dark:bg-black/30 backdrop-blur-md rounded-full text-gray-800 dark:text-white hover:bg-white transition-colors"
+                >
+                    <ArrowLeft className="w-6 h-6" />
+                </button>
+
+                {/* Bag / Favorite Icons (Top Right) */}
+                <div className="absolute top-4 right-4 z-40 flex flex-col gap-3">
+                    <button className="p-2 bg-white/50 dark:bg-black/30 backdrop-blur-md rounded-full text-gray-800 dark:text-white hover:bg-white transition-colors">
+                        <ShoppingBag className="w-6 h-6" />
+                        {/* Dot */}
+                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                    <button
+                        onClick={() => toggleFavorite(product.id)}
+                        className={`p-2 backdrop-blur-md rounded-full transition-colors ${isFavorite ? 'bg-red-50 text-red-500' : 'bg-white/50 dark:bg-black/30 text-gray-800 dark:text-white hover:bg-white'}`}
+                    >
+                        <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
+                    </button>
+                </div>
+
+                {/* Vertical Quantity Stepper (Mid Right) */}
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center bg-gray-900/90 dark:bg-white/90 backdrop-blur-sm text-white dark:text-gray-900 rounded-full py-1 shadow-xl z-30">
+                    <button
+                        onClick={() => setQuantity(q => q < product.stock ? q + 1 : q)}
+                        disabled={quantity >= product.stock}
+                        className="p-2 hover:text-gray-300 dark:hover:text-gray-600 transition-colors disabled:opacity-30"
+                    >
+                        <Plus className="w-4 h-4" />
+                    </button>
+                    <span className="text-sm font-bold py-1">{quantity}</span>
+                    <button
+                        onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                        disabled={quantity <= 1}
+                        className="p-2 hover:text-gray-300 dark:hover:text-gray-600 transition-colors disabled:opacity-30"
+                    >
+                        <Minus className="w-4 h-4" />
+                    </button>
+                </div>
+
+                {/* Price Tag Pill (Floating on Image) */}
+                <div className="absolute bottom-8 left-8 bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-4 py-2 rounded-full shadow-xl transform -rotate-2 z-30">
+                    <span className="font-bold text-lg">{CURRENCY} {product.precio}.00</span>
+                </div>
+
+                {/* Main Product Image */}
+                <img
+                    src={product.imagen || "https://placehold.co/400x400?text=No+Image"}
+                    alt={product.nombre}
+                    className="h-full w-full object-cover mix-blend-multiply dark:mix-blend-normal opacity-95"
+                    style={{ objectPosition: `center ${IMAGE_VERTICAL_ALIGN}` }}
+                    onClick={() => setIsZoomed(true)}
+                    onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=Sin+Foto' }}
+                />
+            </div>
+
+            {/* 2. BOTTOM SECTION: DETAILS SHEET */}
+            <div className="flex-1 bg-white dark:bg-gray-900 rounded-t-[35px] -mt-6 z-20 px-6 py-6 pb-8 flex flex-col shadow-[0_-5px_20px_rgba(0,0,0,0.1)] relative">
+                {/* Handle bar for visual cue */}
+                <div className="w-12 h-1 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-4"></div>
+
+                {/* Title and Rating Row */}
+                <div className="flex justify-between items-start mb-1">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight max-w-[70%]">
+                        {product.nombre}
+                    </h1>
+                    <div className="flex items-center gap-1 text-orange-400">
+                        <Star className="w-5 h-5 fill-current" />
+                        <span className="text-sm font-bold text-gray-700 dark:text-gray-300">4.8 Rating</span>
                     </div>
                 </div>
+
+                {/* Subtitle / Category */}
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 font-medium">
+                    {displaySubtitle}
+                </p>
+
+                {/* Size Selector */}
+                {hasVariants && (
+                    <div className="mb-6">
+                        <div className="flex justify-between items-center mb-3">
+                            <span className="text-sm font-bold text-gray-900 dark:text-white">Selecciona Talla</span>
+                            <span className="text-xs text-gray-500">Guía de tallas</span>
+                        </div>
+                        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                            {product.tallas.map(s => (
+                                <button
+                                    key={s}
+                                    onClick={() => setSelectedSize(s)}
+                                    className={`
+                                        w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold transition-all flex-shrink-0
+                                        ${selectedSize === s
+                                            ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md scale-110'
+                                            : 'border border-gray-300 text-gray-500 hover:border-gray-900 hover:text-gray-900 dark:border-gray-700 dark:hover:border-white dark:hover:text-white'}
+                                    `}
+                                >
+                                    {s}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Description (Truncated) */}
+                <div className="flex-1 overflow-y-auto mb-6 max-h-[100px] scrollbar-hide">
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        {product.descripcion || "Diseño exclusivo de alta calidad, perfecto para cualquier ocasión especial. Fabricado con materiales premium para garantizar comodidad y estilo."}
+                    </p>
+                </div>
+
+                {/* Bottom Action: Price matches title, Buy Button */}
+                <div className="mt-auto">
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={!hasStock || (hasVariants && !selectedSize)}
+                        className={`
+                            w-full py-4 rounded-full font-bold text-lg text-white shadow-xl transition-transform active:scale-95
+                            ${hasStock
+                                ? 'bg-gray-900 hover:bg-black dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'
+                                : 'bg-gray-300 cursor-not-allowed'}
+                        `}
+                    >
+                        {hasStock
+                            ? (hasVariants && !selectedSize ? 'Selecciona Talla' : 'Comprar Ahora')
+                            : 'Agotado'}
+                    </button>
+                </div>
             </div>
+
             {isZoomed && <ImageZoomModal imageUrl={product.imagen} onClose={() => setIsZoomed(false)} />}
-        </>
+        </div>
     );
 };
 
