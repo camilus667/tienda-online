@@ -18,24 +18,38 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [error, setError] = useState<string | null>(null);
-  const [productsVersion, setProductsVersion] = useState(0); 
+  const [productsVersion, setProductsVersion] = useState(0);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'theme');
+  };
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-        const data = await fetchProducts();
-        setProducts(data);
+      const data = await fetchProducts();
+      setProducts(data);
     } catch (e: any) {
-        setError(e.message);
+      setError(e.message);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
     loadProducts();
-  }, [loadProducts, productsVersion]); 
+  }, [loadProducts, productsVersion]);
 
   const forceReload = () => {
     setProductsVersion(prev => prev + 1);
@@ -50,7 +64,7 @@ export default function App() {
       }
       return [...prev, { ...product, key: key, size: size, quantity: quantity }];
     });
-    setIsCartOpen(true); 
+    setIsCartOpen(true);
   }, []);
 
   const updateQuantity = useCallback((key: string, delta: number) => {
@@ -62,7 +76,7 @@ export default function App() {
       return item;
     }).filter(item => item.quantity > 0));
   }, []);
-  
+
   const changeCartItemSize = useCallback((oldKey: string, product: Product, newSize: string) => {
     const newKey = uniqueCartId(product.id, newSize);
     setCart(prevCart => {
@@ -73,7 +87,7 @@ export default function App() {
         return prevCart
           .filter(item => item.key !== oldKey)
           .map(item => item.key === newKey ? { ...item, quantity: item.quantity + currentItem.quantity } : item);
-      } 
+      }
       return prevCart.map(item => item.key === oldKey ? { ...item, key: newKey, size: newSize } : item);
     });
   }, []);
@@ -88,9 +102,9 @@ export default function App() {
   return (
     <HashRouter>
       <div className="min-h-screen bg-gray-50 text-gray-800 font-sans relative w-full">
-          {/* Dynamic Styles Injection */}
-          <style>
-              {`
+        {/* Dynamic Styles Injection */}
+        <style>
+          {`
               :root {
                   --primary-color: ${PRIMARY_COLOR_HEX};
                   --primary-shadow: ${primaryRgbaShadow};
@@ -110,14 +124,26 @@ export default function App() {
               .hover\\:bg-secondary-dark:hover { background-color: color-mix(in srgb, var(--secondary-color) 85%, black); }
               .shadow-secondary { box-shadow: 0 4px 6px -1px var(--secondary-shadow), 0 2px 4px -2px var(--secondary-shadow); }
               .title-font { font-family: var(--title-font); color: var(--title-color); }
+
+              /* Dark mode specific backgrounds if needed */
+              .dark .bg-gray-50 { background-color: #111827; }
+              .dark .bg-white { background-color: #1f2937; }
+              .dark .text-gray-800 { color: #f3f4f6; }
+              .dark .text-gray-600 { color: #d1d5db; }
               `}
-          </style>
-        
-        <Header cartCount={cartCount} onCartClick={() => setIsCartOpen(true)} onReload={forceReload} />
+        </style>
+
+        <Header
+          cartCount={cartCount}
+          onCartClick={() => setIsCartOpen(true)}
+          onReload={forceReload}
+          theme={theme}
+          onToggleTheme={() => setTheme(prev => prev === 'light' ? 'dark' : 'light')}
+        />
 
         <Routes>
           <Route path="/" element={
-            <Home 
+            <Home
               products={products}
               loading={loading}
               error={error}
@@ -129,7 +155,7 @@ export default function App() {
             />
           } />
           <Route path="/producto/:slug" element={
-            <ProductDetail 
+            <ProductDetail
               products={products}
               loading={loading}
               onAddToCart={addToCart}
@@ -137,9 +163,9 @@ export default function App() {
           } />
         </Routes>
 
-        <CartDrawer 
-          isOpen={isCartOpen} 
-          onClose={() => setIsCartOpen(false)} 
+        <CartDrawer
+          isOpen={isCartOpen}
+          onClose={() => setIsCartOpen(false)}
           cart={cart}
           updateQuantity={updateQuantity}
           removeFromCart={removeFromCart}
