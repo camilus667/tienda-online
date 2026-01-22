@@ -101,7 +101,13 @@ const Home: React.FC<HomeProps> = ({
         // CAMBIO PRINCIPAL: grid-cols-2 por defecto, gap reducido en móvil (gap-3)
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              isFavorite={favorites.includes(product.id)}
+              onToggleFavorite={() => toggleFavorite(product.id)}
+              onAddToCart={onAddToCart}
+            />
           ))}
         </div>
       )}
