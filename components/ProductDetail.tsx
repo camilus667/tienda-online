@@ -71,6 +71,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
 
     const handleBack = () => navigate('/');
 
+    // Safety check for categories to avoid join errors
     const categoryDisplay = Array.isArray(product.categoria)
         ? product.categoria.join(', ')
         : (typeof product.categoria === 'string' ? product.categoria : 'General');
@@ -101,10 +102,10 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                     </button>
                 </div>
 
-                {/* Zoom Button */}
+                {/* Zoom Button - Raised */}
                 <button
                     onClick={() => setIsZoomed(true)}
-                    className="absolute bottom-6 right-4 z-30 p-2 bg-black/50 text-white rounded-full backdrop-blur-sm active:scale-95"
+                    className="absolute bottom-12 right-4 z-30 p-2 bg-black/50 text-white rounded-full backdrop-blur-sm active:scale-95"
                 >
                     <Maximize2 className="w-5 h-5" />
                 </button>
@@ -128,8 +129,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                     </button>
                 </div>
 
-                {/* Price Tag */}
-                <div className="absolute bottom-6 left-6 bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-4 py-2 rounded-full shadow-xl transform -rotate-2 z-30">
+                {/* Price Tag - Raised */}
+                <div className="absolute bottom-12 left-6 bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-4 py-2 rounded-full shadow-xl transform -rotate-2 z-30">
                     <span className="font-bold text-lg">{CURRENCY} {product.precio}.00</span>
                 </div>
 
@@ -148,7 +149,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                 {/* Handle */}
                 <div className="w-12 h-1 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-4 flex-shrink-0"></div>
 
-                <div className="space-y-4 pb-20 sm:pb-4">
+                <div className="space-y-3 pb-20 sm:pb-4">
                     {/* Header: Title & Rating */}
                     <div className="flex justify-between items-start">
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight max-w-[70%]">
@@ -158,6 +159,13 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                             <Star className="w-4 h-4 fill-current" />
                             <span className="text-sm font-bold text-gray-700 dark:text-gray-300">4.8</span>
                         </div>
+                    </div>
+
+                    {/* Collection Tag - Moved Below Title */}
+                    <div>
+                        <p className="text-xs text-primary dark:text-primary font-bold uppercase tracking-wider">
+                            {categoryDisplay} Collection
+                        </p>
                     </div>
 
                     {/* Description */}
@@ -190,17 +198,15 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                                     </button>
                                 ))}
                             </div>
+                            {/* Compact Stock Info */}
+                            <div className="mt-2 text-[10px] text-gray-500 dark:text-gray-400 font-medium flex items-center gap-1">
+                                <span className={`w-1.5 h-1.5 rounded-full ${hasStock ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                                {hasStock ? `${product.stock} unidades disponibles` : 'Sin stock'}
+                            </div>
                         </div>
                     )}
 
-                    {/* Collection Tag */}
-                    <div>
-                        <p className="text-xs text-gray-400 uppercase tracking-wider font-bold">
-                            {categoryDisplay} Collection
-                        </p>
-                    </div>
-
-                    {/* Add to Cart Button - Flows naturally after content */}
+                    {/* Add to Cart Button - Distinct Color */}
                     <div className="pt-4">
                         <button
                             onClick={handleAddToCart}
@@ -208,7 +214,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                             className={`
                                 w-full py-4 rounded-2xl font-bold text-lg text-white shadow-xl transition-transform active:scale-95 flex items-center justify-center gap-2
                                 ${hasStock
-                                    ? 'bg-gray-900 hover:bg-black dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'
+                                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 shadow-pink-500/25'
                                     : 'bg-gray-300 cursor-not-allowed'}
                             `}
                         >
