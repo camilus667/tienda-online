@@ -7,10 +7,13 @@ import { createSlug } from '../utils/helpers';
 
 interface ProductCardProps {
   product: Product;
-  onOpen?: () => void; // Deprecated but kept for compatibility if needed
+  onOpen?: () => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
+  onAddToCart?: (product: Product, size: string, quantity: number) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, isFavorite, onToggleFavorite, onAddToCart }) => {
   const navigate = useNavigate();
   const hasStock = product.stock > 0;
   // Get first category safely
@@ -23,9 +26,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     navigate(`/producto/${slug}`);
   };
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (hasStock && onAddToCart) {
+      const defaultSize = product.tallas && product.tallas.length > 0 ? product.tallas[0] : "U";
+      onAddToCart(product, defaultSize, 1);
+    }
+  };
+
   return (
     <div className={`group flex flex-col ${!hasStock ? 'opacity-75' : ''}`}>
-      {/* IMAGEN Y BOTONES FLOTANTES */}
       {/* IMAGEN Y BOTONES FLOTANTES */}
       <div className="relative mb-3 overflow-hidden rounded-[20px] bg-gray-100 dark:bg-gray-800 shadow-none transition-transform active:scale-[0.98]">
         <div className={`relative ${IMAGE_ASPECT_RATIO} cursor-pointer`} onClick={handleOpen}>
@@ -46,10 +56,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
 
         {/* Floating Action Buttons */}
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
           {/* Heart Button */}
-          <button className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-sm flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors">
-            <Heart className="w-4 h-4" strokeWidth={2.5} />
+          <button
+            onClick={(e) => { e.stopPropagation(); onToggleFavorite?.(); }}
+            className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-colors ${isFavorite ? 'bg-red-50 text-red-500' : 'bg-white dark:bg-gray-700 text-gray-400 hover:text-red-500'}`}
+          >
+            <Heart className={`w-4 h-4 ${isFavorite ? 'fill-current' : ''}`} strokeWidth={2.5} />
+          </button>
+
+          {/* Add Button (Restored) */}
+          <button
+            onClick={handleAddToCart}
+            disabled={!hasStock}
+            className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-transform active:scale-95 ${hasStock ? 'bg-gray-900 text-white dark:bg-white dark:text-black hover:bg-black dark:hover:bg-gray-200' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+          >
+            <Plus className="w-4 h-4" strokeWidth={3} />
           </button>
         </div>
       </div>

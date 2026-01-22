@@ -5,9 +5,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 interface BottomNavProps {
     cartCount: number;
     onCartClick: () => void;
+    favoritesCount: number;
+    onFavoritesClick: () => void;
 }
 
-const BottomNav: React.FC<BottomNavProps> = ({ cartCount, onCartClick }) => {
+const BottomNav: React.FC<BottomNavProps> = ({ cartCount, onCartClick, favoritesCount, onFavoritesClick }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [isVisible, setIsVisible] = useState(true);
@@ -30,7 +32,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ cartCount, onCartClick }) => {
 
     const navItems = [
         { icon: Home, label: 'Home', path: '/', action: () => navigate('/') },
-        { icon: Heart, label: 'Favoritos', path: '/favoritos', action: () => console.log('Favoritos clic') }, // Placeholder
+        { icon: Heart, label: 'Favoritos', path: '/favoritos', action: onFavoritesClick, isFav: true },
         { icon: ShoppingBag, label: 'Carrito', path: '', action: onCartClick, isCart: true },
         { icon: User, label: 'Perfil', path: '/perfil', action: () => console.log('Perfil clic') }, // Placeholder
     ];
@@ -52,6 +54,11 @@ const BottomNav: React.FC<BottomNavProps> = ({ cartCount, onCartClick }) => {
                             {item.isCart && cartCount > 0 && (
                                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-gray-900 dark:border-white">
                                     {cartCount}
+                                </span>
+                            )}
+                            {item.isFav && favoritesCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-gray-900 dark:border-white">
+                                    {favoritesCount}
                                 </span>
                             )}
                         </button>

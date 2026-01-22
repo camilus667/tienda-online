@@ -13,6 +13,9 @@ interface HomeProps {
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
   onReload: () => void;
+  favorites: string[];
+  toggleFavorite: (id: string) => void;
+  onAddToCart: (product: Product, size: string, quantity: number) => void;
 }
 
 const Home: React.FC<HomeProps> = ({
@@ -23,7 +26,10 @@ const Home: React.FC<HomeProps> = ({
   setSearchTerm,
   selectedCategory,
   setSelectedCategory,
-  onReload
+  onReload,
+  favorites,
+  toggleFavorite,
+  onAddToCart
 }) => {
   const categories = useMemo(() => {
     const uniqueCats = new Set<string>();
@@ -39,12 +45,16 @@ const Home: React.FC<HomeProps> = ({
     return products.filter(product => {
       const matchesSearch = product.nombre?.toLowerCase().includes(searchTerm.toLowerCase());
       let matchesCategory = selectedCategory === "Todos";
-      if (selectedCategory !== "Todos") {
+
+      if (selectedCategory === "Favoritos") {
+        matchesCategory = favorites.includes(product.id);
+      } else if (selectedCategory !== "Todos") {
         matchesCategory = product.categoria.includes(selectedCategory);
       }
+
       return matchesSearch && matchesCategory;
     });
-  }, [products, searchTerm, selectedCategory]);
+  }, [products, searchTerm, selectedCategory, favorites]);
 
   return (
     <main className="max-w-6xl mx-auto px-4 pt-20 pb-6 transition-colors duration-300">
@@ -62,7 +72,7 @@ const Home: React.FC<HomeProps> = ({
             <input
               type="text"
               placeholder="¿Qué estás buscando?"
-              className="w-full pl-11 pr-4 py-3.5 rounded-full bg-white dark:bg-gray-800 dark:text-white border-none shadow-sm text-sm font-medium transition-all placeholder:text-gray-400 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700"
+              className="w-full pl-11 pr-4 py-3.5 rounded-full bg-gray-100 dark:bg-gray-800 dark:text-white border-2 border-transparent focus:border-primary/20 shadow-sm text-sm font-medium transition-all placeholder:text-gray-500 focus:ring-0 focus:bg-white dark:focus:bg-gray-900"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
