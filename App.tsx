@@ -97,6 +97,24 @@ export default function App() {
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    const saved = localStorage.getItem('favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  const toggleFavorite = useCallback((productId: string) => {
+    setFavorites(prev => {
+      if (prev.includes(productId)) {
+        return prev.filter(id => id !== productId);
+      }
+      return [...prev, productId];
+    });
+  }, []);
+
   const primaryRgbaShadow = hexToRgba(PRIMARY_COLOR_HEX, 0.3);
   const secondaryRgbaShadow = hexToRgba(SECONDARY_COLOR_HEX, 0.3);
 
@@ -154,6 +172,9 @@ export default function App() {
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
                 onReload={forceReload}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
+                onAddToCart={addToCart}
               />
             } />
             <Route path="/producto/:slug" element={
@@ -161,6 +182,8 @@ export default function App() {
                 products={products}
                 loading={loading}
                 onAddToCart={addToCart}
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
               />
             } />
           </Routes>
@@ -175,7 +198,12 @@ export default function App() {
           changeCartItemSize={changeCartItemSize}
         />
 
-        <BottomNav cartCount={cartCount} onCartClick={() => setIsCartOpen(true)} />
+        <BottomNav
+          cartCount={cartCount}
+          onCartClick={() => setIsCartOpen(true)}
+          favoritesCount={favorites.length}
+          onFavoritesClick={() => setSelectedCategory("Favoritos")}
+        />
       </div>
     </HashRouter>
   );
