@@ -49,19 +49,20 @@ const Home: React.FC<HomeProps> = ({
   return (
     <main className="max-w-6xl mx-auto px-4 pt-20 pb-6 transition-colors duration-300">
       {/* Search Bar */}
-      <div className="py-2 space-y-2 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30 transition-colors">
-        {/* Banner Envío Gratis */}
-        <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs sm:text-sm font-bold text-center py-1.5 px-4 rounded-lg mx-auto w-full max-w-xl animate-in fade-in slide-in-from-top-2">
-          ¡Te faltan Bs. 150.00 para tener tu envío GRATIS!
-        </div>
+      <div className="pt-4 pb-2 px-1">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white leading-tight">Bienvenido a</h1>
+        <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600 dark:from-primary dark:to-purple-400">Mundo Kids Style</h2>
+      </div>
 
-        <div className="flex gap-2">
+      {/* Search Bar */}
+      <div className="py-2 space-y-3 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30 transition-colors">
+        <div className="flex gap-2 items-center">
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Buscar productos..."
-              className="w-full pl-11 pr-4 py-3 rounded-full bg-gray-200/60 dark:bg-gray-800 dark:text-white border-none focus:ring-2 focus:ring-primary/50 text-sm font-medium transition-all placeholder:text-gray-500"
+              placeholder="¿Qué estás buscando?"
+              className="w-full pl-11 pr-4 py-3.5 rounded-full bg-white dark:bg-gray-800 dark:text-white border-none shadow-sm text-sm font-medium transition-all placeholder:text-gray-400 focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -73,11 +74,10 @@ const Home: React.FC<HomeProps> = ({
           </div>
           <button
             onClick={onReload}
-            disabled={loading}
-            className={`hidden sm:flex items-center justify-center px-4 py-3 rounded-full font-semibold text-sm transition-colors active:scale-95 shadow-sm ${loading ? 'bg-gray-300 text-gray-600 cursor-not-allowed' : 'bg-white dark:bg-gray-800 text-primary border border-gray-100 dark:border-gray-700 hover:bg-gray-50'}`}
-            title="Actualizar catálogo"
+            className="p-3.5 bg-gray-900 text-white dark:bg-white dark:text-gray-900 rounded-full shadow-md active:scale-95 transition-transform"
+            title="Actualizar / Filtros"
           >
-            {loading ? (<Loader2 className="w-5 h-5 animate-spin" />) : (<RefreshCw className="w-5 h-5" />)}
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
           </button>
         </div>
       </div>
