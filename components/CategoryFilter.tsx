@@ -41,7 +41,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
   }, [selectedCategory]);
 
   return (
-    <div className="sticky top-[112px] sm:top-[112px] z-20 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-sm py-2 mb-4 -mx-4 shadow-sm border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300">
+    <div className="sticky top-[100px] sm:top-[100px] z-20 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-sm py-1.5 mb-2 -mx-4 shadow-sm border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300">
       <div className="flex items-center w-full px-4">
 
         {/* BOTÓN FIJO "TODOS" */}
@@ -49,9 +49,9 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
           <button
             onClick={() => onSelectCategory('Todos')}
             className={`
-                  px-5 py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap active:scale-95 border-0
+                  px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap active:scale-95 border-0
                   ${selectedCategory === 'Todos'
-                ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md'
+                ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-sm'
                 : 'bg-white text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 hover:text-gray-900'}
                 `}
           >
@@ -75,9 +75,9 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
                 }}
                 onClick={() => onSelectCategory(cat)}
                 className={`
-                    flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap active:scale-95 border-0
+                    flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap active:scale-95 border-0
                     ${selectedCategory === cat
-                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-md'
+                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-sm'
                     : 'bg-white text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 hover:text-gray-900'}
                 `}
               >

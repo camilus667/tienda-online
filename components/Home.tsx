@@ -57,7 +57,7 @@ const Home: React.FC<HomeProps> = ({
   }, [products, searchTerm, selectedCategory, favorites]);
 
   return (
-    <main className="max-w-6xl mx-auto px-4 pt-20 pb-6 transition-colors duration-300">
+    <main className="max-w-6xl mx-auto px-4 pb-20 transition-colors duration-300">
       {/* Search Bar */}
       <div className="pt-4 pb-2 px-1">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white leading-tight">Bienvenido a</h1>
