@@ -47,9 +47,9 @@ const Home: React.FC<HomeProps> = ({
   }, [products, searchTerm, selectedCategory]);
 
   return (
-    <main className="max-w-6xl mx-auto px-4 pt-24 pb-6 transition-colors duration-300">
+    <main className="max-w-6xl mx-auto px-4 pt-20 pb-6 transition-colors duration-300">
       {/* Search Bar */}
-      <div className="pt-2 pb-2 space-y-3 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30 transition-colors">
+      <div className="py-1 space-y-3 bg-gray-50 dark:bg-gray-900 sticky top-16 z-30 transition-colors">
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />

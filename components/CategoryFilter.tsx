@@ -41,7 +41,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
   }, [selectedCategory]);
 
   return (
-    <div className="sticky top-[120px] sm:top-[128px] z-20 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-sm py-3 mb-4 -mx-4 shadow-sm border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300">
+    <div className="sticky top-[112px] sm:top-[112px] z-20 bg-gray-50/95 dark:bg-gray-900/95 backdrop-blur-sm py-2 mb-4 -mx-4 shadow-sm border-b border-gray-200/50 dark:border-gray-700/50 transition-all duration-300">
       <div className="flex items-center w-full px-4">
 
         {/* BOTÓN FIJO "TODOS" */}
