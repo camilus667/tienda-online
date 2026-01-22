@@ -1,0 +1,5 @@
+# Netlify Configuration
+[build]
+  # This command returns 0 (success), which tells Netlify to CANCEL the build.
+  # This prevents automatic deployments and saves build minutes.
+  ignore = "exit 0"
