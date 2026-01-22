@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, ShoppingCart } from 'lucide-react';
+import { Plus, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 import { CURRENCY, IMAGE_ASPECT_RATIO, IMAGE_VERTICAL_ALIGN } from '../constants';
@@ -24,57 +24,59 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden flex flex-col shadow-sm hover:shadow-lg dark:hover:shadow-gray-900/50 transition-all group ${!hasStock ? 'opacity-75' : ''}`}>
-      <div className={`relative ${IMAGE_ASPECT_RATIO} overflow-hidden cursor-pointer`} onClick={handleOpen}>
-        <img
-          src={product.imagen || "https://placehold.co/400x400?text=No+Image"}
-          alt={product.nombre}
-          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-          style={{ objectPosition: `center ${IMAGE_VERTICAL_ALIGN}` }}
-          onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=Sin+Foto' }}
-        />
-        {!hasStock && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <span className="bg-red-600 text-white px-2 py-1 rounded-full text-[10px] sm:text-sm font-bold transform -rotate-6 shadow-xl">
-              AGOTADO
-            </span>
-          </div>
-        )}
+    <div className={`group flex flex-col ${!hasStock ? 'opacity-75' : ''}`}>
+      {/* IMAGEN Y BOTONES FLOTANTES */}
+      <div className="relative mb-2 overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div className={`relative ${IMAGE_ASPECT_RATIO} cursor-pointer`} onClick={handleOpen}>
+          <img
+            src={product.imagen || "https://placehold.co/400x400?text=No+Image"}
+            alt={product.nombre}
+            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+            style={{ objectPosition: `center ${IMAGE_VERTICAL_ALIGN}` }}
+            onError={(e) => { (e.target as HTMLImageElement).src = 'https://placehold.co/400x400?text=Sin+Foto' }}
+          />
+          {!hasStock && (
+            <div className="absolute inset-0 bg-white/60 dark:bg-black/60 flex items-center justify-center backdrop-blur-[1px]">
+              <span className="bg-gray-900 text-white px-3 py-1 rounded-full text-xs font-bold shadow-xl">
+                AGOTADO
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Floating Action Buttons */}
+        <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
+          {/* Heart Button (Mockup) */}
+          <button className="w-8 h-8 rounded-full bg-white dark:bg-gray-700 shadow-md flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors border border-gray-100 dark:border-gray-600">
+            <Heart className="w-5 h-5" />
+          </button>
+          {/* Add Button */}
+          <button
+            onClick={(e) => { e.stopPropagation(); handleOpen(); }}
+            disabled={!hasStock}
+            className={`w-8 h-8 rounded-full shadow-md flex items-center justify-center transition-transform active:scale-95 ${hasStock ? 'bg-primary text-white hover:bg-primary-dark border-2 border-white dark:border-gray-800' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+          >
+            <Plus className="w-5 h-5" strokeWidth={3} />
+          </button>
+        </div>
       </div>
-      {/* Padding reducido en móvil (p-2) vs desktop (p-4) */}
-      <div className="p-2 sm:p-4 flex-1 flex flex-col">
-        <div className="flex-1">
-          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold mb-0.5 sm:mb-1 truncate">{displayCategory}</p>
-          {/* Título más pequeño en móvil y limitado a 2 líneas */}
-          <h3 className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white leading-tight mb-1 line-clamp-2 h-9 sm:h-auto">{product.nombre}</h3>
-          {product.descripcion && <p className="hidden sm:block text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{product.descripcion}</p>}
+
+      {/* CONTENIDO TEXTO */}
+      <div className="px-1 flex flex-col gap-1 cursor-pointer" onClick={handleOpen}>
+        {/* Precio Destacado */}
+        <div className="flex items-baseline gap-2">
+          <span className="text-lg sm:text-xl font-extrabold text-gray-900 dark:text-white leading-none">{CURRENCY} {product.precio}</span>
         </div>
 
-        <div className="mt-2 pt-2 border-t border-gray-50 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-2 sm:mb-0 sm:gap-2">
-            <span className="text-base sm:text-xl font-bold text-gray-900 dark:text-white flex-shrink-0">{CURRENCY} {product.precio}</span>
-          </div>
+        {/* Promo (Mockup - si existe campo en el futuro usarlo) */}
+        {/* <p className="text-[10px] sm:text-xs text-secondary font-semibold">Oferta Valida Hasta Agotar Stock</p> */}
 
-          <div className="flex gap-1 sm:gap-2 justify-end mt-1 sm:mt-2">
-            <button
-              onClick={handleOpen}
-              className="px-2 py-1.5 sm:px-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm flex items-center justify-center gap-1 transition-colors bg-secondary text-white hover:bg-secondary-dark active:scale-95 shadow-secondary flex-1 sm:flex-none"
-            >
-              <Search className="w-3 h-3 sm:w-4 sm:h-4" /> <span className="sm:inline">Ver</span>
-            </button>
-            <button
-              onClick={handleOpen}
-              disabled={!hasStock}
-              className={`
-                    px-2 py-1.5 sm:px-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm flex items-center justify-center gap-1 transition-colors active:scale-95 shadow-primary flex-1 sm:flex-none
-                    ${hasStock ? 'bg-primary text-white hover:bg-primary-dark' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}
-                `}
-            >
-              <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="truncate">{hasStock ? 'Agregar' : 'Sin Stock'}</span>
-            </button>
-          </div>
-        </div>
+        {/* Título y Unidad */}
+        <h3 className="text-sm sm:text-base text-gray-800 dark:text-gray-200 font-medium leading-tight line-clamp-2 min-h-[2.5em]">{product.nombre}</h3>
+
+        <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+          {displayCategory} {product.color ? `• ${product.color}` : ''}
+        </p>
       </div>
     </div>
   );
