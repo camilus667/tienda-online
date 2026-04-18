@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Product, CartItem } from './types';
 import { fetchProducts } from './services/productService';
 import { uniqueCartId, hexToRgba } from './utils/helpers';
-import { PRIMARY_COLOR_HEX, SECONDARY_COLOR_HEX, TITLE_FONT_FAMILY, TITLE_COLOR_HEX } from './constants';
+import { PRIMARY_COLOR_HEX, PRIMARY_CONTENT_HEX, SECONDARY_COLOR_HEX, TITLE_FONT_FAMILY, TITLE_COLOR_HEX } from './constants';
 
 import Header from './components/Header';
 import Home from './components/Home';
@@ -15,6 +15,33 @@ export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (isCartOpen) {
+        setIsCartOpen(false);
+      }
+    };
+
+    if (isCartOpen) {
+      // Push state automatically when cart opens so "back" button pops it
+      window.history.pushState({ drawer: 'cart' }, "", window.location.hash);
+      window.addEventListener('popstate', handlePopState);
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isCartOpen]);
+
+  const openCart = () => setIsCartOpen(true);
+  
+  const closeCart = useCallback(() => {
+    if (isCartOpen) {
+      // Go back in history to trigger popstate and close drawer without changing URL
+      window.history.back();
+    }
+  }, [isCartOpen]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
@@ -56,6 +83,11 @@ export default function App() {
     setProductsVersion(prev => prev + 1);
   };
 
+  const handleHomeClick = useCallback(() => {
+    setSearchTerm("");
+    setSelectedCategory("Todos");
+  }, []);
+
   const addToCart = useCallback((product: Product, size: string, quantity: number) => {
     const key = uniqueCartId(product.id, size);
     setCart(prev => {
@@ -65,7 +97,7 @@ export default function App() {
       }
       return [...prev, { ...product, key: key, size: size, quantity: quantity }];
     });
-    setIsCartOpen(true);
+    openCart();
   }, []);
 
   const updateQuantity = useCallback((key: string, delta: number) => {
@@ -126,6 +158,7 @@ export default function App() {
           {`
               :root {
                   --primary-color: ${PRIMARY_COLOR_HEX};
+                  --primary-content: ${PRIMARY_CONTENT_HEX};
                   --primary-shadow: ${primaryRgbaShadow};
                   --secondary-color: ${SECONDARY_COLOR_HEX};
                   --secondary-shadow: ${secondaryRgbaShadow};
@@ -135,6 +168,7 @@ export default function App() {
               .bg-primary { background-color: var(--primary-color); }
               .hover\\:bg-primary-dark:hover { background-color: color-mix(in srgb, var(--primary-color) 85%, black); }
               .text-primary { color: var(--primary-color); }
+              .text-primary-content { color: var(--primary-content); }
               .border-primary { border-color: var(--primary-color); }
               .ring-primary { --tw-ring-color: var(--primary-color); }
               .shadow-primary { box-shadow: 0 4px 6px -1px var(--primary-shadow), 0 2px 4px -2px var(--primary-shadow); }
@@ -154,7 +188,7 @@ export default function App() {
 
         <Header
           cartCount={cartCount}
-          onCartClick={() => setIsCartOpen(true)}
+          onCartClick={openCart}
           onReload={forceReload}
           theme={theme}
           onToggleTheme={toggleTheme}
@@ -191,7 +225,7 @@ export default function App() {
 
         <CartDrawer
           isOpen={isCartOpen}
-          onClose={() => setIsCartOpen(false)}
+          onClose={closeCart}
           cart={cart}
           updateQuantity={updateQuantity}
           removeFromCart={removeFromCart}
@@ -200,9 +234,10 @@ export default function App() {
 
         <BottomNav
           cartCount={cartCount}
-          onCartClick={() => setIsCartOpen(true)}
+          onCartClick={openCart}
           favoritesCount={favorites.length}
           onFavoritesClick={() => setSelectedCategory("Favoritos")}
+          onHomeClick={handleHomeClick}
         />
       </div>
     </HashRouter>

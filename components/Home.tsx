@@ -3,6 +3,7 @@ import { Search, Loader2, RefreshCw, X } from 'lucide-react';
 import { Product } from '../types';
 import CategoryFilter from './CategoryFilter';
 import ProductCard from './ProductCard';
+import { STORE_NAME } from '../constants';
 
 interface HomeProps {
   products: Product[];
@@ -60,12 +61,12 @@ const Home: React.FC<HomeProps> = ({
     <main className="max-w-6xl mx-auto px-4 pb-20 transition-colors duration-300">
       {/* Compact Banner */}
       <div className="pt-20 px-1 mb-2">
-        <div className="w-full bg-gradient-to-r from-gray-900 to-gray-800 dark:from-gray-800 dark:to-gray-900 text-white rounded-xl p-4 shadow-md flex items-center justify-between">
+        <div className="w-full bg-primary text-primary-content rounded-xl p-4 shadow-primary flex items-center justify-between transition-colors">
           <div>
-            <h1 className="text-lg font-bold leading-tight">Mundo Kids</h1>
-            <p className="text-[10px] text-gray-300 font-medium">Estilo y calidad para tus peques</p>
+            <h1 className="text-lg font-bold leading-tight">{STORE_NAME}</h1>
+            <p className="text-[10px] opacity-80 font-medium">Estilo y calidad para tus peques</p>
           </div>
-          <div className="bg-white/20 p-1.5 rounded-full">
+          <div className="bg-black/10 dark:bg-white/10 p-1.5 rounded-full">
             <span className="text-xl">✨</span>
           </div>
         </div>

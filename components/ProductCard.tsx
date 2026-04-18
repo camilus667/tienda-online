@@ -69,7 +69,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, isFavorite, onToggle
           <button
             onClick={handleAddToCart}
             disabled={!hasStock}
-            className={`w-8 h-8 rounded-full shadow-sm flex items-center justify-center transition-transform active:scale-95 ${hasStock ? 'bg-gray-900 text-white dark:bg-white dark:text-black hover:bg-black dark:hover:bg-gray-200' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}
+            className={`w-8 h-8 rounded-full shadow-md flex items-center justify-center transition-transform active:scale-95 ${hasStock ? 'bg-primary text-primary-content hover:opacity-90 dark:hover:opacity-90' : 'bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'}`}
           >
             <Plus className="w-4 h-4" strokeWidth={3} />
           </button>

@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ cartCount, onCartClick, onReload, theme
         {/* Centro Absoluto: Título */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
           <h1
-            className="text-xl sm:text-2xl font-extrabold tracking-tight title-font cursor-pointer pointer-events-auto text-center px-2 select-none dark:text-white"
+            className="text-xl sm:text-2xl font-semibold tracking-tight title-font cursor-pointer pointer-events-auto text-center px-2 select-none dark:text-white"
             onClick={handleLogoClick}
           >
             {STORE_NAME}

@@ -31,11 +31,11 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
   return (
     <>
       <div
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={onClose}
       />
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white dark:bg-gray-800 z-50 shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white dark:bg-gray-800 z-[70] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900 transition-colors">
           <h2 className="text-lg font-bold flex items-center gap-2 dark:text-white"><ShoppingCart className="w-5 h-5 text-primary" /> Tu Pedido</h2>
@@ -91,7 +91,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
         {cart.length > 0 && (
           <div className="p-4 border-t border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 pb-safe transition-colors">
             <div className="flex justify-between items-center mb-4"><span className="text-gray-500 dark:text-gray-400">Total estimado</span><span className="text-2xl font-bold text-gray-900 dark:text-white">{CURRENCY} {cartTotal}</span></div>
-            <button onClick={handleCheckout} className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-xl font-bold text-lg shadow-primary flex items-center justify-center gap-2 transition-transform active:scale-95"><Send className="w-5 h-5" /> Pedir por WhatsApp</button>
+            <button onClick={handleCheckout} className="w-full bg-primary hover:bg-primary-dark text-primary-content py-4 rounded-xl font-bold text-lg shadow-primary flex items-center justify-center gap-2 transition-transform active:scale-95"><Send className="w-5 h-5" /> Pedir por WhatsApp</button>
           </div>
         )}
       </div>

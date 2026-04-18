@@ -148,7 +148,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                 {/* Handle */}
                 <div className="w-12 h-1 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-4 flex-shrink-0"></div>
 
-                <div className="space-y-3 pb-20 sm:pb-4">
+                <div className="space-y-3 pb-36 sm:pb-36">
                     {/* Header: Title & Rating */}
                     <div className="flex justify-between items-start">
                         <h1 className="text-2xl font-bold text-gray-900 dark:text-white leading-tight max-w-[70%]">
@@ -210,10 +210,10 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ products, onAddToCart, lo
                             onClick={handleAddToCart}
                             disabled={!hasStock || (hasVariants && !selectedSize)}
                             className={`
-                                w-full py-4 rounded-2xl font-bold text-lg text-white shadow-xl transition-transform active:scale-95 flex items-center justify-center gap-2
+                                w-full py-4 rounded-2xl font-bold text-lg shadow-xl transition-transform active:scale-95 flex items-center justify-center gap-2
                                 ${hasStock
-                                    ? 'bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 shadow-pink-500/25'
-                                    : 'bg-gray-300 cursor-not-allowed'}
+                                    ? 'bg-primary text-primary-content hover:brightness-95 shadow-primary'
+                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
                             `}
                         >
                             {hasStock

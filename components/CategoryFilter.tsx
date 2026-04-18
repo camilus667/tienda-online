@@ -51,8 +51,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
             className={`
                   px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap active:scale-95 border-0
                   ${selectedCategory === 'Todos'
-                ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-sm'
-                : 'bg-white text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 hover:text-gray-900'}
+                ? 'bg-primary text-primary-content shadow-primary'
+                : 'bg-white text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 hover:text-primary'}
                 `}
           >
             Todos
@@ -77,8 +77,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({ categories, selectedCat
                 className={`
                     flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap active:scale-95 border-0
                     ${selectedCategory === cat
-                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900 shadow-sm'
-                    : 'bg-white text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 hover:text-gray-900'}
+                    ? 'bg-primary text-primary-content shadow-primary'
+                    : 'bg-white text-gray-500 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50 hover:text-primary'}
                 `}
               >
                 {cat}
